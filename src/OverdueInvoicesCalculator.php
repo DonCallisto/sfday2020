@@ -6,7 +6,6 @@ use Money\Money;
 
 class OverdueInvoicesCalculator
 {
-    private const INTEREST_APPLIES_AFTER_DAYS = 7;
     private const INTEREST_PERCENTAGE = 10;
 
     private InvoiceRepositoryInterface $invoiceRepo;
@@ -25,8 +24,8 @@ class OverdueInvoicesCalculator
 
         return array_reduce($overdueInvoices, function (Money $amountDue, Invoice $invoice) use ($date) {
             $amountToPay = $invoice->getAmountToPay();
-            
-            if (!$this->haveToApplyInterests($invoice, $date)) {
+
+            if (!$invoice->canInterestsBeApplied()) {
                 return $amountDue->add($amountToPay);
             }
 
@@ -35,18 +34,5 @@ class OverdueInvoicesCalculator
             return $amountDue->add($amountToPay, Money::EUR($amountToPayWithInterests));
 
         }, Money::EUR(0));
-    }
-
-    private function haveToApplyInterests(Invoice $invoice, \DateTimeInterface $date): bool
-    {
-        if ($invoice->getDueDate() >= $date) {
-            return false;
-        }
-
-        if ($invoice->getDueDate()->diff($date)->days < self::INTEREST_APPLIES_AFTER_DAYS) {
-            return false;
-        }
-
-        return $invoice->canInterestsBeApplied() ?? true;
     }
 }

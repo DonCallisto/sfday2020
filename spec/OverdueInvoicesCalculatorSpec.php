@@ -30,11 +30,11 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
             ->shouldBeLike($invoice1ToPayAmount->add($invoice3ToPayAmount));
     }
 
-    public function it_applies_ten_percent_interests_if_invoice_overdued_by_more_than_seven_days() {
+    public function it_applies_ten_percent_interests_if_interests_can_be_applied() {
         $requestDate = new \DateTime();
 
         $invoice1ToPayAmount = Money::EUR(100);
-        $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-8 days'));
+        $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-1 day'));
         $invoice->interestsCanBeApplied();
 
         $invoiceRepo = new InvoiceRepositoryDummyInterface($invoice);
@@ -44,11 +44,11 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
             ->shouldBeLike($invoice1ToPayAmount->add(Money::EUR(10)));
     }
 
-    public function it_does_not_apply_ten_percent_interests_if_invoice_overdued_by_more_than_seven_days_but_invoice_with_no_interests() {
+    public function it_does_not_apply_ten_percent_interests_if_interests_cannot_be_applied() {
         $requestDate = new \DateTime();
 
         $invoice1ToPayAmount = Money::EUR(100);
-        $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-8 days'));
+        $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-1 day'));
         $invoice->interestsCantBeApplied();
 
         $invoiceRepo = new InvoiceRepositoryDummyInterface($invoice);

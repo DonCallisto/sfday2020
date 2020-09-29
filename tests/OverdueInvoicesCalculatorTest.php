@@ -32,12 +32,12 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $this->assertEquals($invoice1ToPayAmount->add($invoice3ToPayAmount), $calculator->getAmountDue($requestDate));
     }
 
-    public function test_it_applies_ten_percent_interests_if_invoice_overdued_by_more_than_seven_days()
+    public function test_it_applies_ten_percent_interests_if_interests_can_be_applied()
     {
         $requestDate = new \DateTime();
 
         $invoice1ToPayAmount = Money::EUR(100);
-        $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-8 days'));
+        $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-1 day'));
         $invoice->interestsCanBeApplied();
 
         $repo = new InvoiceRepositoryDummyInterface($invoice);
@@ -50,12 +50,12 @@ class OverdueInvoicesCalculatorTest extends TestCase
         );
     }
 
-    public function test_it_does_not_apply_ten_percent_interests_if_invoice_overdued_by_more_than_seven_days_but_invoice_with_no_interests()
+    public function test_it_does_not_apply_ten_percent_interests_if_interests_cannot_be_applied()
     {
         $requestDate = new \DateTime();
 
         $invoice1ToPayAmount = Money::EUR(100);
-        $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-8 days'));
+        $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-1 day'));
         $invoice->interestsCantBeApplied();
 
         $repo = new InvoiceRepositoryDummyInterface($invoice);
