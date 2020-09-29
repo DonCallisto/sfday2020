@@ -30,7 +30,7 @@ class OverdueInvoicesCalculator
                 return $amountDue->add($amountToPay);
             }
 
-            $amountToPayWithInterests = ($amountToPay->getAmount() / 100) * self::INTEREST_PERCENTAGE;
+            $amountToPayWithInterests = (int) ($amountToPay->getAmount() / 100) * self::INTEREST_PERCENTAGE;
 
             return $amountDue->add($amountToPay, Money::EUR($amountToPayWithInterests));
 
@@ -43,6 +43,10 @@ class OverdueInvoicesCalculator
             return false;
         }
 
-        return $invoice->getDueDate()->diff($date)->days >= self::INTEREST_APPLIES_AFTER_DAYS;
+        if ($invoice->getDueDate()->diff($date)->days < self::INTEREST_APPLIES_AFTER_DAYS) {
+            return false;
+        }
+
+        return $invoice->canInterestsBeApplied() ?? true;
     }
 }

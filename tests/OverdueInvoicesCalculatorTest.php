@@ -82,4 +82,31 @@ class OverdueInvoicesCalculatorTest extends TestCase
             $calculator->getAmountDue($requestDate)
         );
     }
+
+    public function test_it_does_not_apply_ten_percent_interests_if_invoice_overdued_by_more_than_seven_days_but_invoice_with_no_interests()
+    {
+        $requestDate = new \DateTime();
+
+        $invoice1ToPayAmount = Money::EUR(100);
+        $invoice = $this->createMock(Invoice::class);
+        $invoice->method('isOverdue')
+            ->with($requestDate)
+            ->willReturn(true);
+        $invoice->method('getDueDate')
+            ->willReturn((clone $requestDate)->modify('-8 days'));
+        $invoice->method('canInterestsBeApplied')
+            ->willReturn(false);
+        $invoice->method('getAmountToPay')
+            ->willReturn($invoice1ToPayAmount);
+
+        $repo = $this->createStub(InvoiceInMemoryRepository::class);
+        $repo->method('findAll')
+            ->willReturn([
+                $invoice,
+            ]);
+
+        $calculator = new OverdueInvoicesCalculator($repo);
+
+        $this->assertEquals($invoice1ToPayAmount, $calculator->getAmountDue($requestDate));
+    }
 }
