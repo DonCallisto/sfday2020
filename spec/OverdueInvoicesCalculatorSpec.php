@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace spec;
 
 use Invoice;
-use InvoiceInMemoryRepository;
 use Money\Money;
 use PhpSpec\ObjectBehavior;
+use stub\InvoiceRepositoryDummyInterface;
 
 class OverdueInvoicesCalculatorSpec extends ObjectBehavior
 {
@@ -23,7 +23,7 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         $invoice3ToPayAmount = Money::EUR(25);
         $invoice3 = new Invoice($invoice3ToPayAmount, (clone $requestDate)->modify('-1 day'));
 
-        $invoiceRepo = new InvoiceInMemoryRepository($invoice1, $invoice2, $invoice3);
+        $invoiceRepo = new InvoiceRepositoryDummyInterface($invoice1, $invoice2, $invoice3);
         $this->beConstructedWith($invoiceRepo);
 
         $this->getAmountDue($requestDate)
@@ -37,7 +37,7 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-8 days'));
         $invoice->interestsCanBeApplied();
 
-        $invoiceRepo = new InvoiceInMemoryRepository($invoice);
+        $invoiceRepo = new InvoiceRepositoryDummyInterface($invoice);
         $this->beConstructedWith($invoiceRepo);
 
         $this->getAmountDue($requestDate)
@@ -51,7 +51,7 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-8 days'));
         $invoice->interestsCantBeApplied();
 
-        $invoiceRepo = new InvoiceInMemoryRepository($invoice);
+        $invoiceRepo = new InvoiceRepositoryDummyInterface($invoice);
         $this->beConstructedWith($invoiceRepo);
 
         $this->getAmountDue($requestDate)

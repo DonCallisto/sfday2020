@@ -10,5 +10,5 @@
   "config": {
     "bin-dir": "bin"
   },
-  "autoload": {"psr-4": {"": "src"}}
+  "autoload": {"psr-4": {"": "src", "stub\\":  "stub"}}
 }

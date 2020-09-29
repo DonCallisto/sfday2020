@@ -6,10 +6,10 @@ declare(strict_types=1);
 namespace tests;
 
 use Invoice;
-use InvoiceInMemoryRepository;
 use Money\Money;
 use OverdueInvoicesCalculator;
 use PHPUnit\Framework\TestCase;
+use stub\InvoiceRepositoryDummyInterface;
 
 class OverdueInvoicesCalculatorTest extends TestCase
 {
@@ -25,7 +25,7 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $invoice3ToPayAmount = Money::EUR(25);
         $invoice3 = new Invoice($invoice3ToPayAmount, (clone $requestDate)->modify('-1 day'));
 
-        $repo = new InvoiceInMemoryRepository($invoice1, $invoice2, $invoice3);
+        $repo = new InvoiceRepositoryDummyInterface($invoice1, $invoice2, $invoice3);
 
         $calculator = new OverdueInvoicesCalculator($repo);
 
@@ -40,7 +40,7 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-8 days'));
         $invoice->interestsCanBeApplied();
 
-        $repo = new InvoiceInMemoryRepository($invoice);
+        $repo = new InvoiceRepositoryDummyInterface($invoice);
 
         $calculator = new OverdueInvoicesCalculator($repo);
 
@@ -58,7 +58,7 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-8 days'));
         $invoice->interestsCantBeApplied();
 
-        $repo = new InvoiceInMemoryRepository($invoice);
+        $repo = new InvoiceRepositoryDummyInterface($invoice);
 
         $calculator = new OverdueInvoicesCalculator($repo);
 
