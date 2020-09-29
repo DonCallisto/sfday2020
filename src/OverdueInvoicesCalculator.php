@@ -9,9 +9,9 @@ class OverdueInvoicesCalculator
     private const INTEREST_APPLIES_AFTER_DAYS = 7;
     private const INTEREST_PERCENTAGE = 10;
 
-    private InvoiceInMemoryRepository $invoiceRepo;
+    private InvoiceRepositoryInterface $invoiceRepo;
 
-    public function __construct(InvoiceInMemoryRepository $invoiceRepo)
+    public function __construct(InvoiceRepositoryInterface $invoiceRepo)
     {
         $this->invoiceRepo = $invoiceRepo;
     }

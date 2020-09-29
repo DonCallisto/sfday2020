@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace spec;
 
 use Invoice;
-use InvoiceInMemoryRepository;
+use InvoiceRepositoryInterface;
 use Money\Money;
 use PhpSpec\ObjectBehavior;
 
 class OverdueInvoicesCalculatorSpec extends ObjectBehavior
 {
-    public function let(InvoiceInMemoryRepository $invoiceRepo)
+    public function let(InvoiceRepositoryInterface $invoiceRepo)
     {
         $this->beConstructedWith($invoiceRepo);
     }
 
     public function it_sums_all_overdue_invoices(
-        InvoiceInMemoryRepository $invoiceRepo,
+        InvoiceRepositoryInterface $invoiceRepo,
         Invoice $invoice1,
         Invoice $invoice2,
         Invoice $invoice3
@@ -67,7 +67,7 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
     }
 
     public function it_applies_ten_percent_interests_if_invoice_overdued_by_more_than_seven_days(
-        InvoiceInMemoryRepository $invoiceRepo,
+        InvoiceRepositoryInterface $invoiceRepo,
         Invoice $invoice
     ) {
         $requestDate = new \DateTime();
@@ -94,7 +94,7 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
     }
 
     public function it_does_not_apply_ten_percent_interests_if_invoice_overdued_by_more_than_seven_days_but_invoice_with_no_interests(
-        InvoiceInMemoryRepository $invoiceRepo,
+        InvoiceRepositoryInterface $invoiceRepo,
         Invoice $invoice
     ) {
         $requestDate = new \DateTime();

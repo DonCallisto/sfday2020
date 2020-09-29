@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace tests;
 
 use Invoice;
-use InvoiceInMemoryRepository;
+use InvoiceRepositoryInterface;
 use Money\Money;
 use OverdueInvoicesCalculator;
 use PHPUnit\Framework\TestCase;
@@ -54,7 +54,7 @@ class OverdueInvoicesCalculatorProphecyTest extends TestCase
         $invoice3->getAmountToPay()
             ->willReturn($invoice3ToPayAmount);
 
-        $repo = $this->prophesize(InvoiceInMemoryRepository::class);
+        $repo = $this->prophesize(InvoiceRepositoryInterface::class);
         $repo->findAllWithDueDateBefore($requestDate)
             ->willReturn([$invoice1, $invoice2, $invoice3]);
 
@@ -80,7 +80,7 @@ class OverdueInvoicesCalculatorProphecyTest extends TestCase
         $invoice->getAmountToPay()
             ->willReturn($invoice1ToPayAmount);
 
-        $repo = $this->prophesize(InvoiceInMemoryRepository::class);
+        $repo = $this->prophesize(InvoiceRepositoryInterface::class);
         $repo->findAllWithDueDateBefore($requestDate)
             ->willReturn([
                 $invoice,
@@ -111,7 +111,7 @@ class OverdueInvoicesCalculatorProphecyTest extends TestCase
         $invoice->getAmountToPay()
             ->willReturn($invoice1ToPayAmount);
 
-        $repo = $this->prophesize(InvoiceInMemoryRepository::class);
+        $repo = $this->prophesize(InvoiceRepositoryInterface::class);
         $repo->findAllWithDueDateBefore($requestDate)
             ->willReturn([
                 $invoice,
