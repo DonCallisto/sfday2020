@@ -25,9 +25,7 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $invoice3ToPayAmount = Money::EUR(25);
         $invoice3 = new Invoice($invoice3ToPayAmount, (clone $requestDate)->modify('-1 day'));
 
-        $repo = $this->createStub(InvoiceInMemoryRepository::class);
-        $repo->method('findAll')
-            ->willReturn([$invoice1, $invoice2, $invoice3]);
+        $repo = new InvoiceInMemoryRepository($invoice1, $invoice2, $invoice3);
 
         $calculator = new OverdueInvoicesCalculator($repo);
 
@@ -42,11 +40,7 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-8 days'));
         $invoice->interestsCanBeApplied();
 
-        $repo = $this->createStub(InvoiceInMemoryRepository::class);
-        $repo->method('findAll')
-            ->willReturn([
-                $invoice,
-            ]);
+        $repo = new InvoiceInMemoryRepository($invoice);
 
         $calculator = new OverdueInvoicesCalculator($repo);
 
@@ -64,11 +58,7 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-8 days'));
         $invoice->interestsCantBeApplied();
 
-        $repo = $this->createStub(InvoiceInMemoryRepository::class);
-        $repo->method('findAll')
-            ->willReturn([
-                $invoice,
-            ]);
+        $repo = new InvoiceInMemoryRepository($invoice);
 
         $calculator = new OverdueInvoicesCalculator($repo);
 
