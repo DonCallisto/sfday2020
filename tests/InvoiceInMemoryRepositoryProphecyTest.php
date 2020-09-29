@@ -16,16 +16,18 @@ class InvoiceInMemoryRepositoryProphecyTest extends TestCase
     public function test_it_returns_invoices_with_a_due_not_after_date()
     {
         $requestDate = new \DateTime();
+        $requestDateImmutable = (new \DateTimeImmutable())
+            ->setTimestamp($requestDate->getTimestamp());
 
         $invoice1 = $this->prophesize(Invoice::class);
         $invoice1->getDueDate()
-            ->willReturn($requestDate);
+            ->willReturn($requestDateImmutable);
         $invoice2 = $this->prophesize(Invoice::class);
         $invoice2->getDueDate()
-            ->willReturn((clone $requestDate)->modify('+1 day'));
+            ->willReturn($requestDateImmutable->modify('+1 day'));
         $invoice3 = $this->prophesize(Invoice::class);
         $invoice3->getDueDate()
-            ->willReturn((clone $requestDate)->modify('-1 day'));
+            ->willReturn($requestDateImmutable->modify('-1 day'));
 
         $repo = new InvoiceInMemoryRepository($invoice1->reveal(), $invoice2->reveal(), $invoice3->reveal());
 

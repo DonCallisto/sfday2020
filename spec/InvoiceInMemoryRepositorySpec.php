@@ -15,13 +15,15 @@ class InvoiceInMemoryRepositorySpec extends ObjectBehavior
         Invoice $invoice3
     ) {
         $requestDate = new \DateTime();
+        $requestDateImmutable = (new \DateTimeImmutable())
+            ->setTimestamp($requestDate->getTimestamp());
 
         $invoice1->getDueDate()
-            ->willReturn($requestDate);
+            ->willReturn($requestDateImmutable);
         $invoice2->getDueDate()
-            ->willReturn((clone $requestDate)->modify('+1 day'));
+            ->willReturn($requestDateImmutable->modify('+1 day'));
         $invoice3->getDueDate()
-            ->willReturn((clone $requestDate)->modify('-1 day'));
+            ->willReturn($requestDateImmutable->modify('-1 day'));
 
         $this->beConstructedWith($invoice1, $invoice2, $invoice3);
 

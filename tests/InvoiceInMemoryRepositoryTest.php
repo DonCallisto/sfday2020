@@ -13,16 +13,18 @@ class InvoiceInMemoryRepositoryTest extends TestCase
     public function test_it_returns_invoices_with_a_due_not_after_date()
     {
         $requestDate = new \DateTime();
+        $requestDateImmutable = (new \DateTimeImmutable())
+            ->setTimestamp($requestDate->getTimestamp());
 
         $invoice1 = $this->createStub(Invoice::class);
         $invoice1->method('getDueDate')
-            ->willReturn($requestDate);
+            ->willReturn($requestDateImmutable);
         $invoice2 = $this->createStub(Invoice::class);
         $invoice2->method('getDueDate')
-            ->willReturn((clone $requestDate)->modify('+1 day'));
+            ->willReturn($requestDateImmutable->modify('+1 day'));
         $invoice3 = $this->createStub(Invoice::class);
         $invoice3->method('getDueDate')
-            ->willReturn((clone $requestDate)->modify('-1 day'));
+            ->willReturn($requestDateImmutable->modify('-1 day'));
 
         $repo = new InvoiceInMemoryRepository($invoice1, $invoice2, $invoice3);
 

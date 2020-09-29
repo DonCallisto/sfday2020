@@ -23,12 +23,14 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         Invoice $invoice3
     ) {
         $requestDate = new \DateTime();
+        $requestDataImmutable = (new \DateTimeImmutable())
+            ->setTimestamp($requestDate->getTimestamp());
 
         $invoice1ToPayAmount = Money::EUR(10);
         $invoice1->isOverdue($requestDate)
             ->willReturn(true);
         $invoice1->getDueDate()
-            ->willReturn($requestDate);
+            ->willReturn($requestDataImmutable);
         $invoice1->canInterestsBeApplied()
             ->willReturn(true);
         $invoice1->getAmountToPay()
@@ -37,7 +39,7 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         $invoice2->isOverdue($requestDate)
             ->willReturn(false);
         $invoice2->getDueDate()
-            ->willReturn($requestDate);
+            ->willReturn($requestDataImmutable);
         $invoice2->canInterestsBeApplied()
             ->willReturn(true);
         $invoice2->getAmountToPay()
@@ -47,7 +49,7 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         $invoice3->isOverdue($requestDate)
             ->willReturn(true);
         $invoice3->getDueDate()
-            ->willReturn($requestDate);
+            ->willReturn($requestDataImmutable);
         $invoice3->canInterestsBeApplied()
             ->willReturn(true);
         $invoice3->getAmountToPay()
@@ -69,12 +71,14 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         Invoice $invoice
     ) {
         $requestDate = new \DateTime();
+        $requestDataImmutable = (new \DateTimeImmutable())
+            ->setTimestamp($requestDate->getTimestamp());
 
         $invoice1ToPayAmount = Money::EUR(100);
         $invoice->isOverdue($requestDate)
             ->willReturn(true);
         $invoice->getDueDate()
-            ->willReturn((clone $requestDate)->modify('-8 days'));
+            ->willReturn($requestDataImmutable->modify('-8 days'));
         $invoice->canInterestsBeApplied()
             ->willReturn(true);
         $invoice->getAmountToPay()
@@ -94,12 +98,14 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         Invoice $invoice
     ) {
         $requestDate = new \DateTime();
+        $requestDataImmutable = (new \DateTimeImmutable())
+            ->setTimestamp($requestDate->getTimestamp());
 
         $invoice1ToPayAmount = Money::EUR(100);
         $invoice->isOverdue($requestDate)
             ->willReturn(true);
         $invoice->getDueDate()
-            ->willReturn((clone $requestDate)->modify('-8 days'));
+            ->willReturn($requestDataImmutable->modify('-8 days'));
         $invoice->canInterestsBeApplied()
             ->willReturn(false);
         $invoice->getAmountToPay()
