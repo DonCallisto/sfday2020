@@ -51,4 +51,27 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         $this->getAmountDue($requestDate)
             ->shouldBeLike($invoice1ToPayAmount->add($invoice3ToPayAmount));
     }
+
+    public function it_applies_ten_percent_interests_if_invoice_overdued_by_more_than_seven_days(
+        InvoiceInMemoryRepository $invoiceRepo,
+        Invoice $invoice
+    ) {
+        $requestDate = new \DateTime();
+
+        $invoice1ToPayAmount = Money::EUR(100);
+        $invoice->isOverdue($requestDate)
+            ->willReturn(true);
+        $invoice->getDueDate()
+            ->willReturn((clone $requestDate)->modify('-8 days'));
+        $invoice->getAmountToPay()
+            ->willReturn($invoice1ToPayAmount);
+
+        $invoiceRepo->findAll()
+            ->willReturn([
+                $invoice,
+            ]);
+
+        $this->getAmountDue($requestDate)
+            ->shouldBeLike($invoice1ToPayAmount->add(Money::EUR(10)));
+    }
 }
