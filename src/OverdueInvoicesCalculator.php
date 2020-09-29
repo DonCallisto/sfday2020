@@ -18,7 +18,7 @@ class OverdueInvoicesCalculator
 
     public function getAmountDue(\DateTimeInterface $date): Money
     {
-        $invoices = $this->invoiceRepo->findAll();
+        $invoices = $this->invoiceRepo->findAllWithDueDateBefore($date);
         $overdueInvoices = array_filter($invoices, function (Invoice $invoice) use ($date) {
             return $invoice->isOverdue($date);
         });
