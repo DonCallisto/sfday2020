@@ -29,6 +29,8 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
             ->willReturn(true);
         $invoice1->getDueDate()
             ->willReturn($requestDate);
+        $invoice1->canInterestsBeApplied()
+            ->willReturn(true);
         $invoice1->getAmountToPay()
             ->willReturn($invoice1ToPayAmount);
 
@@ -36,6 +38,8 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
             ->willReturn(false);
         $invoice2->getDueDate()
             ->willReturn($requestDate);
+        $invoice2->canInterestsBeApplied()
+            ->willReturn(true);
         $invoice2->getAmountToPay()
             ->willReturn(Money::EUR(50));
 
@@ -44,6 +48,8 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
             ->willReturn(true);
         $invoice3->getDueDate()
             ->willReturn($requestDate);
+        $invoice3->canInterestsBeApplied()
+            ->willReturn(true);
         $invoice3->getAmountToPay()
             ->willReturn($invoice3ToPayAmount);
 
@@ -69,6 +75,8 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
             ->willReturn(true);
         $invoice->getDueDate()
             ->willReturn((clone $requestDate)->modify('-8 days'));
+        $invoice->canInterestsBeApplied()
+            ->willReturn(true);
         $invoice->getAmountToPay()
             ->willReturn($invoice1ToPayAmount);
 
