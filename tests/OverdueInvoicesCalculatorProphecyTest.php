@@ -24,12 +24,16 @@ class OverdueInvoicesCalculatorProphecyTest extends TestCase
         $invoice1ToPayAmount = Money::EUR(10);
         $invoice1->isOverdue($requestDate)
             ->willReturn(true);
+        $invoice1->getDueDate()
+            ->willReturn($requestDate);
         $invoice1->getAmountToPay()
             ->willReturn($invoice1ToPayAmount);
 
         $invoice2 = $this->prophesize(Invoice::class);
         $invoice2->isOverdue($requestDate)
             ->willReturn(false);
+        $invoice2->getDueDate()
+            ->willReturn($requestDate);
         $invoice2->getAmountToPay()
             ->willReturn(Money::EUR(50));
 
@@ -37,6 +41,8 @@ class OverdueInvoicesCalculatorProphecyTest extends TestCase
         $invoice3ToPayAmount = Money::EUR(25);
         $invoice3->isOverdue($requestDate)
             ->willReturn(true);
+        $invoice3->getDueDate()
+            ->willReturn($requestDate);
         $invoice3->getAmountToPay()
             ->willReturn($invoice3ToPayAmount);
 

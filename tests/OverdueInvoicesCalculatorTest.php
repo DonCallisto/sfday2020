@@ -22,6 +22,8 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $invoice1->method('isOverdue')
             ->with($requestDate)
             ->willReturn(true);
+        $invoice1->method('getDueDate')
+            ->willReturn($requestDate);
         $invoice1->method('getAmountToPay')
             ->willReturn($invoice1ToPayAmount);
 
@@ -29,6 +31,8 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $invoice2->method('isOverdue')
             ->with($requestDate)
             ->willReturn(false);
+        $invoice2->method('getDueDate')
+            ->willReturn($requestDate);
         $invoice2->method('getAmountToPay')
             ->willReturn(Money::EUR(50));
 
@@ -37,6 +41,8 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $invoice3->method('isOverdue')
             ->with($requestDate)
             ->willReturn(true);
+        $invoice3->method('getDueDate')
+            ->willReturn($requestDate);
         $invoice3->method('getAmountToPay')
             ->willReturn($invoice3ToPayAmount);
 
