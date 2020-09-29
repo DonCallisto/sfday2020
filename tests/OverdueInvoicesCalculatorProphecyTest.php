@@ -53,7 +53,7 @@ class OverdueInvoicesCalculatorProphecyTest extends TestCase
             ->willReturn($invoice3ToPayAmount);
 
         $repo = $this->prophesize(InvoiceInMemoryRepository::class);
-        $repo->findAll()
+        $repo->findAllWithDueDateBefore($requestDate)
             ->willReturn([$invoice1, $invoice2, $invoice3]);
 
         $calculator = new OverdueInvoicesCalculator($repo->reveal());
@@ -77,7 +77,7 @@ class OverdueInvoicesCalculatorProphecyTest extends TestCase
             ->willReturn($invoice1ToPayAmount);
 
         $repo = $this->prophesize(InvoiceInMemoryRepository::class);
-        $repo->findAll()
+        $repo->findAllWithDueDateBefore($requestDate)
             ->willReturn([
                 $invoice,
             ]);
@@ -106,7 +106,7 @@ class OverdueInvoicesCalculatorProphecyTest extends TestCase
             ->willReturn($invoice1ToPayAmount);
 
         $repo = $this->prophesize(InvoiceInMemoryRepository::class);
-        $repo->findAll()
+        $repo->findAllWithDueDateBefore($requestDate)
             ->willReturn([
                 $invoice,
             ]);

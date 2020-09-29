@@ -53,7 +53,7 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         $invoice3->getAmountToPay()
             ->willReturn($invoice3ToPayAmount);
 
-        $invoiceRepo->findAll()
+        $invoiceRepo->findAllWithDueDateBefore($requestDate)
             ->willReturn([
                 $invoice1,
                 $invoice2,
@@ -80,7 +80,7 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         $invoice->getAmountToPay()
             ->willReturn($invoice1ToPayAmount);
 
-        $invoiceRepo->findAll()
+        $invoiceRepo->findAllWithDueDateBefore($requestDate)
             ->willReturn([
                 $invoice,
             ]);
@@ -105,7 +105,7 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         $invoice->getAmountToPay()
             ->willReturn($invoice1ToPayAmount);
 
-        $invoiceRepo->findAll()
+        $invoiceRepo->findAllWithDueDateBefore($requestDate)
             ->willReturn([
                 $invoice,
             ]);

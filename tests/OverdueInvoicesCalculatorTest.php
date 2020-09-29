@@ -46,8 +46,9 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $invoice3->method('getAmountToPay')
             ->willReturn($invoice3ToPayAmount);
 
-        $repo = $this->createStub(InvoiceInMemoryRepository::class);
-        $repo->method('findAll')
+        $repo = $this->createMock(InvoiceInMemoryRepository::class);
+        $repo->method('findAllWithDueDateBefore')
+            ->with($requestDate)
             ->willReturn([$invoice1, $invoice2, $invoice3]);
 
         $calculator = new OverdueInvoicesCalculator($repo);
@@ -69,8 +70,9 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $invoice->method('getAmountToPay')
             ->willReturn($invoice1ToPayAmount);
 
-        $repo = $this->createStub(InvoiceInMemoryRepository::class);
-        $repo->method('findAll')
+        $repo = $this->createMock(InvoiceInMemoryRepository::class);
+        $repo->method('findAllWithDueDateBefore')
+            ->with($requestDate)
             ->willReturn([
                 $invoice,
             ]);
@@ -99,8 +101,9 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $invoice->method('getAmountToPay')
             ->willReturn($invoice1ToPayAmount);
 
-        $repo = $this->createStub(InvoiceInMemoryRepository::class);
-        $repo->method('findAll')
+        $repo = $this->createMock(InvoiceInMemoryRepository::class);
+        $repo->method('findAllWithDueDateBefore')
+            ->with($requestDate)
             ->willReturn([
                 $invoice,
             ]);
