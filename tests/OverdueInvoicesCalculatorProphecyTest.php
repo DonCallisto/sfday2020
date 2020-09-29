@@ -36,4 +36,25 @@ class OverdueInvoicesCalculatorProphecyTest extends TestCase
 
         $this->assertEquals($invoice1ToPayAmount->add($invoice3ToPayAmount), $calculator->getAmountDue($requestDate));
     }
+
+    public function test_it_applies_ten_percent_interests_if_invoice_overdued_by_more_than_seven_days()
+    {
+        $requestDate = new \DateTime();
+
+        $invoice1ToPayAmount = Money::EUR(100);
+        $invoice = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-8 days'));
+
+        $repo = $this->prophesize(InvoiceInMemoryRepository::class);
+        $repo->findAll()
+            ->willReturn([
+                $invoice,
+            ]);
+
+        $calculator = new OverdueInvoicesCalculator($repo->reveal());
+
+        $this->assertEquals(
+            $invoice1ToPayAmount->add(Money::EUR(10)),
+            $calculator->getAmountDue($requestDate)
+        );
+    }
 }
