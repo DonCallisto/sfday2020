@@ -74,7 +74,7 @@ class Invoice
         $date = (clone $date)
             ->setTime(0, 0, 0);
 
-        return $date > $this->dueDate;
+        return $date >= $this->dueDate;
     }
 
     public function getDueDate(): \DateTimeImmutable
