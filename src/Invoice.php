@@ -12,7 +12,7 @@ class Invoice
 
     private Money $amount;
 
-    private \DateTimeInterface $dueDate;
+    private \DateTimeImmutable $dueDate;
 
     private Money $paidAmount;
 
@@ -23,7 +23,9 @@ class Invoice
     public function __construct(Money $amount, \DateTimeInterface $dueDate)
     {
         $this->amount = $amount;
-        $this->dueDate = (clone $dueDate)->setTime(0, 0, 0);
+        $this->dueDate = (new \DateTimeImmutable())
+            ->setTimestamp($dueDate->getTimestamp())
+            ->setTime(0, 0, 0);
         $this->paidAmount = Money::EUR(0);
         $this->status = self::STATUS_NEW;
     }
@@ -75,7 +77,7 @@ class Invoice
         return $date > $this->dueDate;
     }
 
-    public function getDueDate(): \DateTimeInterface
+    public function getDueDate(): \DateTimeImmutable
     {
         return $this->dueDate;
     }
