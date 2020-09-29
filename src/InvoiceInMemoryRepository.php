@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-class InvoiceInMemoryRepository
+class InvoiceInMemoryRepository implements InvoiceRepositoryInterface
 {
     /**
      * @var Invoice[]
@@ -14,19 +14,11 @@ class InvoiceInMemoryRepository
         $this->invoices = $invoices;
     }
 
-    /**
-     * @return Invoice[]
-     */
     public function findAll(): array
     {
         return $this->invoices;
     }
 
-    /**
-     * @param DateTimeInterface $date
-     *
-     * @return Invoice[]
-     */
     public function findAllWithDueDateBefore(\DateTimeInterface $date): array
     {
         $date = (new \DateTimeImmutable())->setTimestamp($date->getTimestamp())
