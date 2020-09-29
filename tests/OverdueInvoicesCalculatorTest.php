@@ -25,7 +25,7 @@ class OverdueInvoicesCalculatorTest extends TestCase
             ->with($requestDate)
             ->willReturn(true);
         $invoice1->method('getDueDate')
-            ->willReturn($requestDataImmutable);
+            ->willReturn($requestDataImmutable); // DEAD CODE!
         $invoice1->method('getAmountToPay')
             ->willReturn($invoice1ToPayAmount);
 
@@ -34,7 +34,7 @@ class OverdueInvoicesCalculatorTest extends TestCase
             ->with($requestDate)
             ->willReturn(false);
         $invoice2->method('getDueDate')
-            ->willReturn($requestDataImmutable);
+            ->willReturn($requestDataImmutable); // DEAD CODE!
         $invoice2->method('getAmountToPay')
             ->willReturn(Money::EUR(50));
 
@@ -44,7 +44,7 @@ class OverdueInvoicesCalculatorTest extends TestCase
             ->with($requestDate)
             ->willReturn(true);
         $invoice3->method('getDueDate')
-            ->willReturn($requestDataImmutable);
+            ->willReturn($requestDataImmutable); // DEAD CODE!
         $invoice3->method('getAmountToPay')
             ->willReturn($invoice3ToPayAmount);
 
@@ -58,19 +58,17 @@ class OverdueInvoicesCalculatorTest extends TestCase
         $this->assertEquals($invoice1ToPayAmount->add($invoice3ToPayAmount), $calculator->getAmountDue($requestDate));
     }
 
-    public function test_it_applies_ten_percent_interests_if_invoice_overdued_by_more_than_seven_days()
+    public function test_it_applies_ten_percent_interests_if_interests_can_be_applied()
     {
         $requestDate = new \DateTime();
-        $requestDataImmutable = (new \DateTimeImmutable())
-            ->setTimestamp($requestDate->getTimestamp());
 
         $invoice1ToPayAmount = Money::EUR(100);
         $invoice = $this->createMock(Invoice::class);
         $invoice->method('isOverdue')
             ->with($requestDate)
             ->willReturn(true);
-        $invoice->method('getDueDate')
-            ->willReturn($requestDataImmutable->modify('-8 days'));
+        $invoice->method('canInterestsBeApplied')
+            ->willReturn(true);
         $invoice->method('getAmountToPay')
             ->willReturn($invoice1ToPayAmount);
 
@@ -89,19 +87,15 @@ class OverdueInvoicesCalculatorTest extends TestCase
         );
     }
 
-    public function test_it_does_not_apply_ten_percent_interests_if_invoice_overdued_by_more_than_seven_days_but_invoice_with_no_interests()
+    public function test_it_does_not_apply_ten_percent_interests_if_interests_cannot_be_applied()
     {
         $requestDate = new \DateTime();
-        $requestDataImmutable = (new \DateTimeImmutable())
-            ->setTimestamp($requestDate->getTimestamp());
 
         $invoice1ToPayAmount = Money::EUR(100);
         $invoice = $this->createMock(Invoice::class);
         $invoice->method('isOverdue')
             ->with($requestDate)
             ->willReturn(true);
-        $invoice->method('getDueDate')
-            ->willReturn($requestDataImmutable->modify('-8 days'));
         $invoice->method('canInterestsBeApplied')
             ->willReturn(false);
         $invoice->method('getAmountToPay')

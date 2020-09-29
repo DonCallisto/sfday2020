@@ -30,7 +30,7 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         $invoice1->isOverdue($requestDate)
             ->willReturn(true);
         $invoice1->getDueDate()
-            ->willReturn($requestDataImmutable);
+            ->willReturn($requestDataImmutable); // DEAD CODE!
         $invoice1->canInterestsBeApplied()
             ->willReturn(true);
         $invoice1->getAmountToPay()
@@ -39,7 +39,7 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         $invoice2->isOverdue($requestDate)
             ->willReturn(false);
         $invoice2->getDueDate()
-            ->willReturn($requestDataImmutable);
+            ->willReturn($requestDataImmutable); // DEAD CODE!
         $invoice2->canInterestsBeApplied()
             ->willReturn(true);
         $invoice2->getAmountToPay()
@@ -49,7 +49,7 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
         $invoice3->isOverdue($requestDate)
             ->willReturn(true);
         $invoice3->getDueDate()
-            ->willReturn($requestDataImmutable);
+            ->willReturn($requestDataImmutable); // DEAD CODE!
         $invoice3->canInterestsBeApplied()
             ->willReturn(true);
         $invoice3->getAmountToPay()
@@ -66,19 +66,15 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
             ->shouldBeLike($invoice1ToPayAmount->add($invoice3ToPayAmount));
     }
 
-    public function it_applies_ten_percent_interests_if_invoice_overdued_by_more_than_seven_days(
+    public function it_applies_ten_percent_interests_if_interests_can_be_applied(
         InvoiceRepositoryInterface $invoiceRepo,
         Invoice $invoice
     ) {
         $requestDate = new \DateTime();
-        $requestDataImmutable = (new \DateTimeImmutable())
-            ->setTimestamp($requestDate->getTimestamp());
 
         $invoice1ToPayAmount = Money::EUR(100);
         $invoice->isOverdue($requestDate)
             ->willReturn(true);
-        $invoice->getDueDate()
-            ->willReturn($requestDataImmutable->modify('-8 days'));
         $invoice->canInterestsBeApplied()
             ->willReturn(true);
         $invoice->getAmountToPay()
@@ -93,19 +89,15 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
             ->shouldBeLike($invoice1ToPayAmount->add(Money::EUR(10)));
     }
 
-    public function it_does_not_apply_ten_percent_interests_if_invoice_overdued_by_more_than_seven_days_but_invoice_with_no_interests(
+    public function it_does_not_apply_ten_percent_interests_if_interests_cannot_be_applied(
         InvoiceRepositoryInterface $invoiceRepo,
         Invoice $invoice
     ) {
         $requestDate = new \DateTime();
-        $requestDataImmutable = (new \DateTimeImmutable())
-            ->setTimestamp($requestDate->getTimestamp());
 
         $invoice1ToPayAmount = Money::EUR(100);
         $invoice->isOverdue($requestDate)
             ->willReturn(true);
-        $invoice->getDueDate()
-            ->willReturn($requestDataImmutable->modify('-8 days'));
         $invoice->canInterestsBeApplied()
             ->willReturn(false);
         $invoice->getAmountToPay()
