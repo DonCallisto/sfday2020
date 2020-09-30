@@ -6,6 +6,7 @@ namespace spec;
 
 use Invoice;
 use Money\Money;
+use NotifierInterface;
 use PhpSpec\ObjectBehavior;
 use stub\InvoiceRepositoryDummyInterface;
 
@@ -56,5 +57,32 @@ class OverdueInvoicesCalculatorSpec extends ObjectBehavior
 
         $this->getAmountDue($requestDate)
             ->shouldBeLike($invoice1ToPayAmount);
+    }
+
+    /*
+     * I've should've tested also for = 200 and <200 (shouldNotBeCalled).
+     * That's left out intentionally
+     */
+    public function it_notifies_when_overdued_amount_overtakes_two_hundred_euro(
+        NotifierInterface $notifier1,
+        NotifierInterface $notifier2
+    ) {
+        $requestDate = new \DateTime();
+
+        $invoice1ToPayAmount = Money::EUR(100);
+        $invoice1 = new Invoice($invoice1ToPayAmount, (clone $requestDate)->modify('-1 day'));
+
+        $invoice2ToPayAmount = Money::EUR(101);
+        $invoice2 = new Invoice($invoice2ToPayAmount, (clone $requestDate)->modify('-1 day'));
+
+        $invoiceRepo = new InvoiceRepositoryDummyInterface($invoice1, $invoice2);
+        $this->beConstructedWith($invoiceRepo, $notifier1, $notifier2);
+
+        $notifier1->notify($requestDate, $invoice1, $invoice2)
+            ->shouldBeCalledTimes(1);
+        $notifier2->notify($requestDate, $invoice1, $invoice2)
+            ->shouldBeCalledTimes(1);
+
+        $this->getAmountDue($requestDate);
     }
 }

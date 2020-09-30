@@ -7,12 +7,19 @@ use Money\Money;
 class OverdueInvoicesCalculator
 {
     private const INTEREST_PERCENTAGE = 10;
+    private const OVERDUED_AMOUNT_FOR_NOTIFICATIONS = 200;
 
     private InvoiceRepositoryInterface $invoiceRepo;
 
-    public function __construct(InvoiceRepositoryInterface $invoiceRepo)
+    /**
+     * @var NotifierInterface[]
+     */
+    private array $notifiers;
+
+    public function __construct(InvoiceRepositoryInterface $invoiceRepo, NotifierInterface ...$notifiers)
     {
         $this->invoiceRepo = $invoiceRepo;
+        $this->notifiers = $notifiers;
     }
 
     public function getAmountDue(\DateTimeInterface $date): Money
@@ -22,7 +29,7 @@ class OverdueInvoicesCalculator
             return $invoice->isOverdue($date);
         });
 
-        return array_reduce($overdueInvoices, function (Money $amountDue, Invoice $invoice) use ($date) {
+        $overduedAmount = array_reduce($overdueInvoices, function (Money $amountDue, Invoice $invoice) use ($date) {
             $amountToPay = $invoice->getAmountToPay();
 
             if (!$invoice->canInterestsBeApplied()) {
@@ -34,5 +41,13 @@ class OverdueInvoicesCalculator
             return $amountDue->add($amountToPay, Money::EUR($amountToPayWithInterests));
 
         }, Money::EUR(0));
+
+        if ($overduedAmount->getAmount() > self::OVERDUED_AMOUNT_FOR_NOTIFICATIONS) {
+            foreach ($this->notifiers as $notifier) {
+                $notifier->notify($date, ...$overdueInvoices);
+            }
+        }
+
+        return $overduedAmount;
     }
 }
